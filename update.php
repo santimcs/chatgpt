@@ -1,26 +1,29 @@
 <?php
 include 'config.php';
 
-$error = "";
+$errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $id = $_POST['id'];
     $name = $_POST['name'];
-    //name validation
-    if(empty($_POST['name']))
+    if(empty($name))
     {
-        $error = "a name is required";
+        $errors[] = "A name is required";
     }
     $date = $_POST['date'];
     $qty = $_POST['qty'];
+    if($qty <= 0)
+    {
+        $errors[] = "Quantity must be greater than zero";
+    }
     $u_cost = $_POST['u_cost'];
     $active = $_POST['active'];
     $period = $_POST['period'];
     $grade = $_POST['grade'];
     $dividend = $_POST['dividend'];
 
-    if(empty($error)) {
+    if(empty($errors)) {
 
         $sql = "UPDATE portfolios SET name=?, date=?, qty=?, u_cost=?, active=?, period=?, grade=?, dividend=? WHERE id=?";
         $stmt = $conn->prepare($sql);
@@ -87,9 +90,12 @@ if (isset($_GET['id']) || isset($_POST['id'])) {
                 <div class="card-header bg-warning">
                     <h1 class="text-white text-center">  Update Portfolio </h1>
                 </div><br>
-                <?php if ($error): ?>
+                <!-- Display errors -->
+                <?php if (!empty($errors)): ?>
                     <div class="alert alert-danger" role="alert">
-                        <?php echo $error; ?>
+                        <?php foreach ($errors as $error): ?>
+                            <p><?php echo $error; ?></p>
+                        <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
 
