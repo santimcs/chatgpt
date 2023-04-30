@@ -20,7 +20,7 @@ $result = $conn->query($sql);
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
-        <a class="navbar-brand" href="index.php">PHP CRUD OPERATION</a>
+        <a class="navbar-brand" href="read.php">PHP CRUD OPERATION</a>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item">
@@ -40,9 +40,10 @@ $result = $conn->query($sql);
                     <th>ID</th>
                     <th>Name</th>
                     <th>Date</th>
-                    <th>Quantity</th>
-                    <th>Unit Cost</th>
-                    <th>Active</th>
+                    <th>Qty</th>
+                    <th>Cost</th>
+                    <th>Cost Amt</th>
+                    <th>A</th>
                     <th>Period</th>
                     <th>Grade</th>
                     <th>Dividend</th>
@@ -55,8 +56,16 @@ $result = $conn->query($sql);
                     <td><?php echo $row['id']; ?></td>
                     <td><?php echo $row['name']; ?></td>
                     <td><?php echo $row['date']; ?></td>
-                    <td><?php echo $row['qty']; ?></td>
+
+                    <?php $formatted_qty = number_format($row['qty'], 0, '.', ','); ?>
+                    <td><?php echo $formatted_qty; ?></td>
+
                     <td><?php echo $row['u_cost']; ?></td>
+
+                    <?php $cost = $row['qty'] * $row['u_cost']; ?>
+							      <?php $formatted_cost = number_format($cost, 2, '.', ','); ?>
+                    <td><?php echo $formatted_cost; ?></td>
+
                     <td><?php echo $row['active']; ?></td>
                     <td><?php echo $row['period']; ?></td>
                     <td><?php echo $row['grade']; ?></td>

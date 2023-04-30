@@ -1,9 +1,17 @@
 <?php
 include 'config.php';
 
+$error = "";
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
     $id = $_POST['id'];
     $name = $_POST['name'];
+    //name validation
+    if(empty($_POST['name']))
+    {
+        $error = "a name is required";
+    }
     $date = $_POST['date'];
     $qty = $_POST['qty'];
     $u_cost = $_POST['u_cost'];
@@ -12,26 +20,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $grade = $_POST['grade'];
     $dividend = $_POST['dividend'];
 
-    $sql = "UPDATE portfolios SET name=?, date=?, qty=?, u_cost=?, active=?, period=?, grade=?, dividend=? WHERE id=?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssiiissdi", $name, $date, $qty, $u_cost, $active, $period, $grade, $dividend, $id);
+    if(empty($error)) {
 
-    if ($stmt->execute()) {
-        header("Location: read.php");
-    } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        $sql = "UPDATE portfolios SET name=?, date=?, qty=?, u_cost=?, active=?, period=?, grade=?, dividend=? WHERE id=?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ssiiissdi", $name, $date, $qty, $u_cost, $active, $period, $grade, $dividend, $id);
+
+        if ($stmt->execute()) {
+            header("Location: read.php");
+        } else {
+            echo "Error: " . $sql . "<br>" . $conn->error;
+        }
+        $stmt->close();
     }
-    $stmt->close();
 }
 
-$id = $_GET['id'];
-$sql = "SELECT * FROM portfolios WHERE id=?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $id);
-$stmt->execute();
-$result = $stmt->get_result();
-$row = $result->fetch_assoc();
-$stmt->close();
+if (isset($_GET['id']) || isset($_POST['id'])) {
+    $id = isset($_GET['id']) ? $_GET['id'] : $_POST['id'];
+        $sql = "SELECT * FROM portfolios WHERE id=?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $stmt->close();
+    } else {
+        header("Location: read.php");
+        exit();
+    }
 ?>
 
 <!DOCTYPE html>
@@ -41,7 +57,6 @@ $stmt->close();
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Portfolio</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
@@ -72,6 +87,11 @@ $stmt->close();
                 <div class="card-header bg-warning">
                     <h1 class="text-white text-center">  Update Portfolio </h1>
                 </div><br>
+                <?php if ($error): ?>
+                    <div class="alert alert-danger" role="alert">
+                        <?php echo $error; ?>
+                    </div>
+                <?php endif; ?>
 
                 <!-- <input type="hidden" name="id" value="<?php echo $row['id']; ?>"> -->
                 <input type="hidden" name="id" value="<?php echo $id; ?>" class="form-control"> <br>
