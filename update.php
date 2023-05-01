@@ -4,27 +4,56 @@ include 'config.php';
 $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
     $id = $_POST['id'];
+    
     $name = $_POST['name'];
-    if(empty($name))
-    {
-        $errors[] = "A name is required";
+    // Validation check for name
+    $sql_name_check = "SELECT COUNT(*) as name_count FROM tickers WHERE name = ?";
+    $stmt_name_check = $conn->prepare($sql_name_check);
+    $stmt_name_check->bind_param("s", $name);
+    $stmt_name_check->execute();
+    $result_name_check = $stmt_name_check->get_result();
+    $row_name_check = $result_name_check->fetch_assoc();
+    if ($row_name_check['name_count'] == 0) {
+        $errors[] = "Name must belong to the 'name' column of the 'tickers' table";
     }
+    $stmt_name_check->close();
+
     $date = $_POST['date'];
+    // Input date cannot be future date
+    $today = date("Y-m-d");
+    if ($date > $today) {
+        $errors[] = "Date cannot be greater than today";
+    }
     $qty = $_POST['qty'];
     if($qty <= 0)
     {
         $errors[] = "Quantity must be greater than zero";
     }
     $u_cost = $_POST['u_cost'];
+    // Validation check for unit cost
+    if($u_cost <= 0)
+    {
+        $errors[] = "Unit cost must be greater than zero";
+    }
     $active = $_POST['active'];
     $period = $_POST['period'];
+    // Validation check for period
+    if ($period < 1 || $period > 4) {
+        $errors[] = "Period must be between 1 and 4";
+    }
     $grade = $_POST['grade'];
+    // Validation check for grade
+    if (!preg_match("/^[ABC][1-4]$/", $grade)) {
+        $errors[] = "Grade must start with 'A', 'B', or 'C' and be followed by a number between 1 and 4";
+    }    
     $dividend = $_POST['dividend'];
-
+    // Validation check for dividend
+    if($dividend < 0)
+    {
+        $errors[] = "Dividend must be positive";
+    }
     if(empty($errors)) {
-
         $sql = "UPDATE portfolios SET name=?, date=?, qty=?, u_cost=?, active=?, period=?, grade=?, dividend=? WHERE id=?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("ssiiissdi", $name, $date, $qty, $u_cost, $active, $period, $grade, $dividend, $id);
@@ -38,8 +67,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-if (isset($_GET['id']) || isset($_POST['id'])) {
-    $id = isset($_GET['id']) ? $_GET['id'] : $_POST['id'];
+    if (isset($_GET['id']) || isset($_POST['id'])) {
+        $id = isset($_GET['id']) ? $_GET['id'] : $_POST['id'];
         $sql = "SELECT * FROM portfolios WHERE id=?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $id);
@@ -47,10 +76,10 @@ if (isset($_GET['id']) || isset($_POST['id'])) {
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
         $stmt->close();
-    } else {
-        header("Location: read.php");
-        exit();
-    }
+        } else {
+            header("Location: read.php");
+            exit();
+        }
 ?>
 
 <!DOCTYPE html>
@@ -86,7 +115,9 @@ if (isset($_GET['id']) || isset($_POST['id'])) {
 
         <form action="update.php" method="post">
         <br><br>
+
             <div class="card">
+
                 <div class="card-header bg-warning">
                     <h1 class="text-white text-center">  Update Portfolio </h1>
                 </div><br>
@@ -99,12 +130,9 @@ if (isset($_GET['id']) || isset($_POST['id'])) {
                     </div>
                 <?php endif; ?>
 
-                <!-- <input type="hidden" name="id" value="<?php echo $row['id']; ?>"> -->
                 <input type="hidden" name="id" value="<?php echo $id; ?>" class="form-control"> <br>
-
                 <label> NAME: </label>
                 <input type="text" name="name" value="<?php echo $row['name']; ?>" class="form-control"> <br>
-
                 <label for="date">Date:</label>
                 <input type="date" name="date" id="date" value="<?php echo $row['date']; ?>" required><br>
                 <label for="qty">Quantity:</label>
@@ -123,8 +151,7 @@ if (isset($_GET['id']) || isset($_POST['id'])) {
             </div>
         </form>
     </div>
+
     <a href="read.php">Back to list</a>
 </body>
 </html>
-
-
