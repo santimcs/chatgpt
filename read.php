@@ -5,13 +5,12 @@ $sql = "SELECT * FROM portfolios";
 $result = $conn->query($sql);
 ?>
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
@@ -74,10 +73,6 @@ $result = $conn->query($sql);
                         <a class="btn btn-success" href="update.php?id=<?php echo $row['id']; ?>">Edit</a>
                         <a class="btn btn-danger" href="delete.php?id=<?php echo $row['id']; ?>">Delete</a>
                     </td>
-                    <!-- <td>
-                    <a class='btn btn-success' href='edit.php?id=$row[id]'>Edit</a>
-                    <a class='btn btn-danger' href='delete.php?id=$row[id]'>Delete</a>
-                    </td> -->
                 </tr>
                 <?php endwhile; ?>
             </tbody>
