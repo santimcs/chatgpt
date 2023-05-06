@@ -29,10 +29,21 @@
 
         <form action="create.php" method="post">
             <br><br>
+
             <div class="card">
                 <div class="card-header bg-primary">
                     <h1 class="text-white text-center">  Create New Portfolio </h1>
                 </div><br>
+                <!-- Display errors -->
+                <?php if(isset($_GET['error'])): ?>
+                    <div class="alert alert-danger" role="alert">
+                        <ul>
+                            <?php foreach(explode(',', $_GET['error']) as $error): ?>
+                                <li><?php echo htmlspecialchars($error); ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                <?php endif; ?>                
 
                 <label for="name">Name:</label>
                 <input type="text" name="name" id="name" maxlength="10" required><br>

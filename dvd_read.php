@@ -51,8 +51,8 @@ $result = $conn->query($sql);
                     <td><?php echo $row['pay_date']; ?></td>
                     <td><?php echo $row['actual']; ?></td>
                     <td>
-                        <a class="btn btn-success" href="update.php?id=<?php echo $row['id']; ?>">Edit</a>
-                        <a class="btn btn-danger" href="delete.php?id=<?php echo $row['id']; ?>">Delete</a>
+                        <a class="btn btn-success" href="dvd_update.php?id=<?php echo $row['id']; ?>">Edit</a>
+                        <a class="btn btn-danger" href="dvd_delete.php?id=<?php echo $row['id']; ?>">Delete</a>
                     </td>
                 </tr>
                 <?php endwhile; ?>

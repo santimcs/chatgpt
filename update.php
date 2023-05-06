@@ -1,5 +1,6 @@
 <?php
 include 'config.php';
+include 'validation_functions.php';
 
 $errors = [];
 
@@ -7,56 +8,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = $_POST['id'];
     
     $name = $_POST['name'];
-    // Validation check for name
-    $sql_name_check = "SELECT COUNT(*) as name_count FROM tickers WHERE name = ?";
-    $stmt_name_check = $conn->prepare($sql_name_check);
-    $stmt_name_check->bind_param("s", $name);
-    $stmt_name_check->execute();
-    $result_name_check = $stmt_name_check->get_result();
-    $row_name_check = $result_name_check->fetch_assoc();
-    if ($row_name_check['name_count'] == 0) {
-        $errors[] = "Name must belong to the 'name' column of the 'tickers' table";
-    }
-    $stmt_name_check->close();
-
+    $name_error = validate_name($name, $conn);
+    if ($name_error) {
+        $errors[] = $name_error;
+    } 
     $date = $_POST['date'];
-    // Input date cannot be future date
-    $today = date("Y-m-d");
-    if ($date > $today) {
-        $errors[] = "Date cannot be greater than today";
+    $date_error = validate_date($date);
+    if ($date_error) {
+        $errors[] = $date_error;
     }
     $qty = $_POST['qty'];
-    if($qty <= 0)
-    {
-        $errors[] = "Quantity must be greater than zero";
+    $qty_error = validate_qty($qty);
+    if ($qty_error) {
+        $errors[] = $qty_error;
     }
     $u_cost = $_POST['u_cost'];
-    // Validation check for unit cost
-    if($u_cost <= 0)
-    {
-        $errors[] = "Unit cost must be greater than zero";
+    $u_cost_error = validate_u_cost($u_cost);
+    if ($u_cost_error) {
+        $errors[] = $u_cost_error;
     }
     $active = $_POST['active'];
     $period = $_POST['period'];
-    // Validation check for period
-    if ($period < 1 || $period > 4) {
-        $errors[] = "Period must be between 1 and 4";
+    $period_error = validate_period($period);
+    if ($period_error) {
+        $errors[] = $period_error;
     }
     $grade = $_POST['grade'];
-    // Validation check for grade
-    if (!preg_match("/^[ABC][1-4]$/", $grade)) {
-        $errors[] = "Grade must start with 'A', 'B', or 'C' and be followed by a number between 1 and 4";
-    }    
+    $grade_error = validate_grade($grade);
+    if ($grade_error) {
+        $errors[] = $grade_error;
+    }   
     $dividend = $_POST['dividend'];
-    // Validation check for dividend
-    if($dividend < 0)
-    {
-        $errors[] = "Dividend must be positive";
+    if ($dividend_error) {
+        $errors[] = $dividend_error;
     }
+    
     if(empty($errors)) {
         $sql = "UPDATE portfolios SET name=?, date=?, qty=?, u_cost=?, active=?, period=?, grade=?, dividend=? WHERE id=?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssiiissdi", $name, $date, $qty, $u_cost, $active, $period, $grade, $dividend, $id);
+        $stmt->bind_param("ssidissdi", $name, $date, $qty, $u_cost, $active, $period, $grade, $dividend, $id);
 
         if ($stmt->execute()) {
             header("Location: read.php");
