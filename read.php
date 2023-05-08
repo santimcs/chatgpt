@@ -26,6 +26,9 @@ $result = $conn->query($sql);
               <a class="nav-link active" aria-current="page" href="read.php">Home</a>
             </li>
             <li class="nav-item">
+              <a type="button" class="btn btn-secondary nav-link" href="dvd_read.php">Dividends</a>
+            </li>
+            <li class="nav-item">
               <a type="button" class="btn btn-primary nav-link active" href="create_form.php">Add New</a>
             </li>
           </ul>

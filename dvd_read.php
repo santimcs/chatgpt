@@ -1,7 +1,7 @@
 <?php
 include 'config.php';
 
-$sql = "SELECT * FROM dividends";
+$sql = "SELECT * FROM dividends ORDER BY name";
 $result = $conn->query($sql);
 ?>
 
@@ -17,6 +17,24 @@ $result = $conn->query($sql);
     <title>Read Dividends</title>
 </head>
 <body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="read.php">PHP CRUD OPERATION</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="dvd_read.php">Home</a>
+            </li>
+            <li class="nav-item">
+              <a type="button" class="btn btn-secondary nav-link" href="dvd_read.php">Dividends</a>
+            </li>
+            <li class="nav-item">
+              <a type="button" class="btn btn-primary nav-link active" href="dvd_create_form.php">Add New</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>    
     <div class="container my-4">
         <table class="table">
             <thead>

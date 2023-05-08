@@ -21,8 +21,47 @@ function validate_date($date) {
     return null;
 }
 
+function validate_date_combo($xdate, $pay_date) {
+    if ($xdate > $pay_date) {
+        return "XDate cannot be greater than pay_date";
+    }
+    return null;
+}
+
+function validate_q1($q1) {
+    if($q1 < 0)
+    {
+        return "Q1 must be greater than or equal to zero";
+    }
+    return null;
+}
+
+function validate_q2($q2) {
+    if($q2 < 0)
+    {
+        return "Q2 must be greater than or equal to zero";
+    }
+    return null;
+}
+
+function validate_q3($q3) {
+    if($q3 < 0)
+    {
+        return "Q3 must be greater than or equal to zero";
+    }
+    return null;
+}
+
+function validate_q4($q4) {
+    if($q4 < 0)
+    {
+        return "Q4 must be greater than or equal to zero";
+    }
+    return null;
+}
+
 function validate_qty($qty) {
-    if($qty <= 0)
+    if($qty < 0)
     {
         return "Quantity must be greater than or equal to zero";
     }

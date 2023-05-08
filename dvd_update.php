@@ -1,46 +1,35 @@
 <?php
 include 'config.php';
+include 'validation_functions.php';
 
 $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = $_POST['id'];
     $name = $_POST['name'];
-    // Validation check for name
-    $sql_name_check = "SELECT COUNT(*) as name_count FROM tickers WHERE name = ?";
-    $stmt_name_check = $conn->prepare($sql_name_check);
-    $stmt_name_check->bind_param("s", $name);
-    $stmt_name_check->execute();
-    $result_name_check = $stmt_name_check->get_result();
-    $row_name_check = $result_name_check->fetch_assoc();
-    if ($row_name_check['name_count'] == 0) {
-        $errors[] = "Name must belong to the 'name' column of the 'tickers' table";
-    }
-    $stmt_name_check->close();
-    // End of name validation check
+    $name_error = validate_name($name, $conn);
+    if ($name_error) {
+        $errors[] = $name_error;
+    } 
     $q4 = $_POST['q4'];
-    // Validation check for q4
-    if($q4 < 0)
-    {
-        $errors[] = "Q4 must be greater than or equal to zero";
+    $q4_error = validate_q4($q4);
+    if ($q4_error) {
+        $errors[] = $q4_error;
     }
     $q3 = $_POST['q3'];
-    // Validation check for q3
-    if($q3 < 0)
-    {
-        $errors[] = "Q3 must be greater than or equal to zero";
-    }    
+    $q3_error = validate_q3($Dq3);
+    if ($q3_error) {
+        $errors[] = $q3_error;
+    }  
     $q2 = $_POST['q2'];
-    // Validation check for q2
-    if($q2 < 0)
-    {
-        $errors[] = "Q2 must be greater than or equal to zero";
+    $q2_error = validate_q2($q2);
+    if ($q2_error) {
+        $errors[] = $q2_error;
     }
     $q1 = $_POST['q1'];
-    // Validation check for q1
-    if($q1 < 0)
-    {
-        $errors[] = "Q1 must be greater than or equal to zero";
+    $q1_error = validate_q1($q1);
+    if ($q1_error) {
+        $errors[] = $q1_error;
     }
     $dividend = $_POST['dividend'];
     // Validation check for dividend
@@ -49,16 +38,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors[] = "Dividend must be greater than or equal to zero";
     }
     $qty = $_POST['qty'];
-    if($qty < 0)
-    {
-        $errors[] = "Quantity must be greater than or equal to zero";
+    $qty_error = validate_qty($qty);
+    if ($qty_error) {
+        $errors[] = $qty_error;
     }
     $xdate = $_POST['xdate'];
     $pay_date = $_POST['pay_date'];
     // Xdate & pay_date combination check
-    if ($xdate > $pay_date) {
-        $errors[] = "Xdate cannot be greater than pay date";
-    }
+    $date_combo_error = validate_date_combo($xdate, $pay_date);
+    if ($date_combo_error) {
+        $errors[] = $date_combo_error;
+    } 
     $actual = $_POST['actual'];
 
     if(empty($errors)) {

@@ -43,12 +43,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($dividend_error) {
         $errors[] = $dividend_error;
     }
+    
     if (!empty($errors)) {
         $error_message = implode(',', $errors);
         header("Location: create_form.php?error=".urlencode($error_message));
         exit();
     }
-      
 
     if(empty($errors)) {
         $sql = "INSERT INTO portfolios (name, date, qty, u_cost, active, period, grade, dividend) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";

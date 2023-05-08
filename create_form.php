@@ -24,7 +24,6 @@
             </div>
         </div>
     </nav>
-    <!-- <h1>Create Portfolio</h1> -->
     <div class="col-lg-6 m-auto">
 
         <form action="create.php" method="post">
