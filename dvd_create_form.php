@@ -1,3 +1,19 @@
+<?php
+// Connect to the database
+require_once 'config.php';
+
+// Fetch the ticker names from the 'tickers' table
+$query = "SELECT name FROM tickers ORDER BY name";
+$result = $conn->query($query);
+$ticker_names = [];
+
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $ticker_names[] = $row['name'];
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -45,8 +61,14 @@
                     </div>
                 <?php endif; ?> 
 
+                <!-- <label for="name">Name:</label>
+                <input type="text" name="name" id="name" maxlength="10" required><br> -->
                 <label for="name">Name:</label>
-                <input type="text" name="name" id="name" maxlength="10" required><br>
+                    <select name="name" id="name" required>
+                        <?php foreach ($ticker_names as $ticker_name): ?>
+                            <option value="<?php echo htmlspecialchars($ticker_name); ?>"><?php echo htmlspecialchars($ticker_name); ?></option>
+                        <?php endforeach; ?>
+                    </select><br>
 
                 <label for="q4">Q4:</label>
                 <input type="number" step="0.01" name="q4" id="q4" required><br>
