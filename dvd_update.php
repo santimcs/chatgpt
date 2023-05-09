@@ -6,6 +6,7 @@ $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = $_POST['id'];
+
     $name = $_POST['name'];
     $name_error = validate_name($name, $conn);
     if ($name_error) {
@@ -16,32 +17,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($q4_error) {
         $errors[] = $q4_error;
     }
+
     $q3 = $_POST['q3'];
-    $q3_error = validate_q3($Dq3);
+    $q3_error = validate_q3($q3);
     if ($q3_error) {
         $errors[] = $q3_error;
     }  
+
     $q2 = $_POST['q2'];
     $q2_error = validate_q2($q2);
     if ($q2_error) {
         $errors[] = $q2_error;
     }
+
     $q1 = $_POST['q1'];
     $q1_error = validate_q1($q1);
     if ($q1_error) {
         $errors[] = $q1_error;
     }
+
     $dividend = $_POST['dividend'];
-    // Validation check for dividend
-    if($dividend < 0)
-    {
-        $errors[] = "Dividend must be greater than or equal to zero";
-    }
+    $dividend_error = validate_dividend($dividend);
+    if ($dividend_error) {
+        $errors[] = $dividend_error;
+    }    
+
     $qty = $_POST['qty'];
     $qty_error = validate_qty($qty);
     if ($qty_error) {
         $errors[] = $qty_error;
     }
+
     $xdate = $_POST['xdate'];
     $pay_date = $_POST['pay_date'];
     // Xdate & pay_date combination check
@@ -49,13 +55,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($date_combo_error) {
         $errors[] = $date_combo_error;
     } 
+
     $actual = $_POST['actual'];
 
     if(empty($errors)) {
         $sql = "UPDATE dividends SET name = ?, q4 = ?, q3 = ?, q2 = ?, q1 = ?, dividend = ?, qty = ?, xdate = ?, pay_date = ?, actual = ? WHERE id = ?";
         $stmt = $conn->prepare($sql);
-        // $stmt->bind_param("siiiiiiddii", $name, $q4, $q3, $q2, $q1, $dividend, $qty, $xdate, $pay_date, $actual, $id);
         $stmt->bind_param("sdddddissii", $name, $q4, $q3, $q2, $q1, $dividend, $qty, $xdate, $pay_date, $actual, $id);
+        
         if ($stmt->execute()) {
             header("Location: dvd_read.php");
         } else {
@@ -66,6 +73,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
     if (isset($_GET['id']) || isset($_POST['id'])) {
+        // Fetch the ticker names from the 'tickers' table
+        $query = "SELECT name FROM tickers ORDER BY name";
+        $result = $conn->query($query);
+        $ticker_names = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $ticker_names[] = $row['name'];
+            }
+        }
+
         $id = isset($_GET['id']) ? $_GET['id'] : $_POST['id'];
         $sql = "SELECT * FROM dividends WHERE id=?";
         $stmt = $conn->prepare($sql);
@@ -73,6 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->execute();
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
+        $current_data = $row;
         $stmt->close();
         } else {
             header("Location: dvd_read.php");
@@ -94,7 +113,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <form action="dvd_update.php" method="post">
         <br><br>
+
             <div class="card">
+            <p><?php echo $row['id']; ?></p>
 
                 <div class="card-header bg-warning">
                     <h1 class="text-white text-center">  Update Dividend </h1>
@@ -106,11 +127,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <p><?php echo $error; ?></p>
                         <?php endforeach; ?>
                     </div>
-                <?php endif; ?>           
+                <?php endif; ?>  
 
-                <input type="hidden" name="id" value="<?php echo $id; ?>" class="form-control"> <br>
                 <label for="name">Name:</label>
-                <input type="text" name="name" value="<?php echo $row['name']; ?>" class="form-control"> <br>
+                <select name="name" id="name" required>
+                    <?php foreach ($ticker_names as $ticker_name): ?>
+                        <option value="<?php echo htmlspecialchars($ticker_name); ?>"<?php echo $ticker_name === $current_data['name'] ? ' selected' : ''; ?>><?php echo htmlspecialchars($ticker_name); ?></option>
+                    <?php endforeach; ?>
+                </select><br>
+
                 <label for="q4">Q4:</label>
                 <input type="number" step="0.0001" name="q4" id="q4" value="<?php echo $row['q4']; ?>" required><br>
                 <label for="q3">Q3:</label>

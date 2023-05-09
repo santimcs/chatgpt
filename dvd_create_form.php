@@ -1,5 +1,4 @@
 <?php
-// Connect to the database
 require_once 'config.php';
 
 // Fetch the ticker names from the 'tickers' table
@@ -61,8 +60,6 @@ if ($result->num_rows > 0) {
                     </div>
                 <?php endif; ?> 
 
-                <!-- <label for="name">Name:</label>
-                <input type="text" name="name" id="name" maxlength="10" required><br> -->
                 <label for="name">Name:</label>
                     <select name="name" id="name" required>
                         <?php foreach ($ticker_names as $ticker_name): ?>

@@ -21,9 +21,17 @@ function validate_date($date) {
     return null;
 }
 
+
 function validate_date_combo($xdate, $pay_date) {
     if ($xdate > $pay_date) {
         return "XDate cannot be greater than pay_date";
+    }
+    return null;
+}
+
+function validate_dividend($dividend) {
+    if ($dividend < 0) {
+        return "Dividend must be greater than or equal to zero";
     }
     return null;
 }
@@ -86,14 +94,6 @@ function validate_period($period) {
 function validate_grade($grade) {
     if (!preg_match("/^[ABC][1-4]$/", $grade)) {
         return "Grade must start with 'A', 'B', or 'C' and be followed by a number between 1 and 4";
-    }
-    return null;
-}
-
-function validate_dividend($dividend) {
-    if($dividend < 0)
-    {
-        return "Dividend must be positive";
     }
     return null;
 }
