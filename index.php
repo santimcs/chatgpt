@@ -25,6 +25,9 @@
             <li class="nav-item">
               <a type="button" class="btn btn-secondary nav-link" href="dvd_read.php">Dividends</a>
             </li>
+            <li class="nav-item">
+              <a type="button" class="btn btn-secondary nav-link" href="usr_read.php">Users</a>
+            </li>
           </ul>
         </div>
       </div>

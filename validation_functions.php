@@ -13,6 +13,13 @@ function validate_name($name, $conn) {
     return null;
 }
 
+function validate_username($username) {
+    if (strpos($username, ' ') !== false) {
+        return "Username should not contain spaces.";
+    }
+    return null;
+}
+
 function validate_date($date) {
     $today = date("Y-m-d");
     if ($date > $today) {
@@ -72,6 +79,14 @@ function validate_qty($qty) {
     if($qty < 0)
     {
         return "Quantity must be greater than or equal to zero";
+    }
+    return null;
+}
+
+function validate_role($role) {
+    $allowed_roles = ['user', 'admin'];
+    if (!in_array($role, $allowed_roles)) {
+        return "Role should be either 'user' or 'admin'.";
     }
     return null;
 }

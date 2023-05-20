@@ -8,18 +8,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id = $_POST["id"];
 
     $username = $_POST["username"];
+    $username_error = validate_username($username);
+    if ($username_error) {
+        $errors[] = $username_error;
+    }    
+
     $email = $_POST["email"];
     $email_error = validate_email($email);
     if ($email_error) {
         $errors[] = $email_error;
     }
+
     $password = $_POST["password"];
     $password_error = validate_password($password);
     if ($password_error) {
         $errors[] = $password_error;
     }    
-    $role = $_POST["role"];
 
+    $role = $_POST["role"];
+    $role_error = validate_role($role);
+    if ($role_error) {
+        $errors[] = $role_error;
+    }
+    
     if(empty($errors)) {
         $sql = "UPDATE users SET username=?, email=?, password=?, role=? WHERE id=?";
         $stmt = $conn->prepare($sql);
@@ -88,7 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <!-- Addidtion to skeleton program  4 -->
             <div class="card">
                 <div class="card-header bg-warning">
-                    <h1 class="text-white text-center">  Update Portfolio </h1>
+                    <h1 class="text-white text-center">  Update User </h1>
                 </div><br>
                 <!-- Display errors -->
                 <?php if (!empty($errors)): ?>

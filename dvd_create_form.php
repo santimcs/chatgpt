@@ -27,7 +27,7 @@ if ($result->num_rows > 0) {
 
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="read.php">PHP CRUD OPERATION</a>
             <div class="collapse navbar-collapse" id="navbarNav">
