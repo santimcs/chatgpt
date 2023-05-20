@@ -12,6 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($name_error) {
         $errors[] = $name_error;
     } 
+
     $q4 = $_POST['q4'];
     $q4_error = validate_q4($q4);
     if ($q4_error) {
@@ -59,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $actual = $_POST['actual'];
 
     if(empty($errors)) {
-        $sql = "UPDATE dividends SET name = ?, q4 = ?, q3 = ?, q2 = ?, q1 = ?, dividend = ?, qty = ?, xdate = ?, pay_date = ?, actual = ? WHERE id = ?";
+        $sql = "UPDATE dividends SET name=?, q4=?, q3=?, q2=?, q1=?, dividend=?, qty=?, xdate=?, pay_date=?, actual=? WHERE id=?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("sdddddissii", $name, $q4, $q3, $q2, $q1, $dividend, $qty, $xdate, $pay_date, $actual, $id);
         
@@ -128,6 +129,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>  
+
+                <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
 
                 <label for="name">Name:</label>
                 <select name="name" id="name" required>

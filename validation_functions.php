@@ -97,3 +97,18 @@ function validate_grade($grade) {
     }
     return null;
 }
+
+function validate_email($email) {
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return "Invalid email format";
+    }
+    return null;
+}
+
+function validate_password($password) {
+    $passwordRegex = "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/";
+    if (!preg_match($passwordRegex, $password)) {
+        return "Password must be at least 8 characters, with both upper and lower case letters, at least one number & special character.";
+    }
+    return null;
+}

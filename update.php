@@ -79,12 +79,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Portfolio</title>
+    <!--  Addidtion to skeleton program  1 -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </head>
 <body>
+    <!-- Addidtion to skeleton program  2 -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark" class="fw-bold">
         <div class="container-fluid">
             <a class="navbar-brand" href="index.php">PHP CRUD OPERATION</a>
@@ -100,12 +102,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </div>
     </nav>
-    <!-- <h1>Update Portfolio</h1> -->
+    <!-- Addidtion to skeleton program  3 -->
     <div class="col-lg-6 m-auto">
 
         <form action="update.php" method="post">
         <br><br>
-
+            <!-- Addidtion to skeleton program  4 -->
             <div class="card">
 
                 <div class="card-header bg-warning">
@@ -139,9 +141,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <input type="number" step="0.0001" name="dividend" id="dividend" value="<?php echo $row['dividend']; ?>" required><br>
                 <input type="submit" value="Update">
             </div>
-        </form>
+            <!-- End of Addidtion to skeleton program  4 -->
+            </form>
     </div>
-
+    <!-- End of Addidtion to skeleton program  3 -->
     <a href="read.php">Back to list</a>
 </body>
 </html>
